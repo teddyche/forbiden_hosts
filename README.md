@@ -58,7 +58,7 @@ forbidden_hosts/
 ### Domaine de production interdit (`group_vars/all.yml`)
 
 ```yaml
-forbidden_host_domain: "sec-prod1.lan"
+forbidden_host_domain: "not.allow"
 ```
 
 Tout host dont le nom se **termine** par ce domaine est considéré interdit dans un inventaire hors-prod. Modifier uniquement si le domaine de production change.
