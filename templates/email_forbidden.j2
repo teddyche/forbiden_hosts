@@ -1,0 +1,209 @@
+{# ============================================================ #}
+{# Template : Alerte hosts de production en hors-production    #}
+{# Variables attendues :                                        #}
+{#   item      → {key: org_name, value: [violations]}          #}
+{#   _org      → {id, name, label, contact_email}              #}
+{#   forbidden_host_domain  → domaine interdit                  #}
+{#   env_name  → nom de l'environnement                        #}
+{#   report_date → date du jour                                 #}
+{# ============================================================ #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <!--[if mso]>
+  <noscript>
+    <xml><o:OfficeDocumentSettings>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings></xml>
+  </noscript>
+  <![endif]-->
+</head>
+<body style="margin:0;padding:0;background-color:#f4f6f8;font-family:Calibri,Arial,sans-serif;font-size:14px;color:#1d2d44;">
+
+  <!-- Conteneur principal -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8;">
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+
+        <!-- Carte email -->
+        <table role="presentation" width="640" cellpadding="0" cellspacing="0"
+               style="background-color:#ffffff;border:1px solid #dde3ea;width:640px;max-width:640px;">
+
+          <!-- ================================================ -->
+          <!-- BANDEAU ALERTE                                   -->
+          <!-- ================================================ -->
+          <tr>
+            <td bgcolor="#c62828" style="background-color:#c62828;padding:18px 28px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td>
+                    <p style="margin:0;font-size:11px;color:#ffcdd2;letter-spacing:1px;text-transform:uppercase;">
+                      Alerte PCI DSS — {{ env_name }}
+                    </p>
+                    <p style="margin:4px 0 0;font-size:20px;font-weight:bold;color:#ffffff;">
+                      Hosts de production detectes en hors-production
+                    </p>
+                    <p style="margin:4px 0 0;font-size:12px;color:#ffcdd2;">
+                      Equipe {{ _org.label }} — {{ report_date }}
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ================================================ -->
+          <!-- CORPS                                            -->
+          <!-- ================================================ -->
+          <tr>
+            <td style="padding:28px 28px 0;">
+
+              <p style="margin:0 0 14px;">Bonjour,</p>
+
+              <p style="margin:0 0 14px;">
+                Dans le cadre du controle automatique des inventaires AAP en
+                <strong>{{ env_name }}</strong>, nous avons detecte une anomalie :
+                un ou plusieurs inventaires de votre equipe (<strong>{{ _org.label }}</strong>)
+                contiennent des hosts appartenant au domaine de production
+                <strong>{{ forbidden_host_domain }}</strong>.
+              </p>
+
+              <!-- Encart PCI DSS -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                     style="margin-bottom:20px;">
+                <tr>
+                  <td bgcolor="#fff8e1" style="background-color:#fff8e1;border-left:4px solid #f9a825;
+                      padding:12px 16px;">
+                    <p style="margin:0;font-size:13px;color:#5d4037;">
+                      <strong>Pourquoi c'est important ?</strong><br/>
+                      Cette situation constitue une non-conformite aux exigences
+                      <strong>PCI DSS</strong>, qui imposent une separation stricte
+                      entre les environnements de production et hors-production.
+                      Tout host de production present dans un inventaire hors-prod
+                      expose potentiellement vos systemes de production a des
+                      executions non maitrisees.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0 0 8px;">
+                <strong>Ce que nous vous demandons</strong><br/>
+                Merci de retirer ces hosts de production des inventaires
+                hors-production listes ci-dessous dans les meilleurs delais.
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- ================================================ -->
+          <!-- TABLEAU DES VIOLATIONS                           -->
+          <!-- ================================================ -->
+          <tr>
+            <td style="padding:20px 28px 0;">
+
+              <p style="margin:0 0 10px;font-size:13px;font-weight:bold;
+                  color:#c62828;text-transform:uppercase;letter-spacing:0.5px;
+                  border-bottom:2px solid #c62828;padding-bottom:6px;">
+                Inventaires en anomalie — {{ item.value | length }} inventaire(s)
+              </p>
+
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                     style="border-collapse:collapse;width:100%;">
+
+                <!-- En-tête -->
+                <tr>
+                  <th bgcolor="#1d2d44" style="background-color:#1d2d44;color:#ffffff;
+                      padding:10px 12px;text-align:left;font-size:12px;
+                      font-weight:bold;border:1px solid #1d2d44;width:45%;">
+                    Inventaire
+                  </th>
+                  <th bgcolor="#1d2d44" style="background-color:#1d2d44;color:#ffffff;
+                      padding:10px 12px;text-align:left;font-size:12px;
+                      font-weight:bold;border:1px solid #1d2d44;width:10%;">
+                    Hosts
+                  </th>
+                  <th bgcolor="#1d2d44" style="background-color:#1d2d44;color:#ffffff;
+                      padding:10px 12px;text-align:left;font-size:12px;
+                      font-weight:bold;border:1px solid #1d2d44;width:45%;">
+                    Hosts interdits detectes
+                  </th>
+                </tr>
+
+                {% for violation in item.value %}
+                {% set row_bg = "#fff5f5" if loop.index is odd else "#ffffff" %}
+                <tr>
+                  <!-- Inventaire -->
+                  <td bgcolor="{{ row_bg }}" style="background-color:{{ row_bg }};
+                      padding:10px 12px;border:1px solid #dde3ea;
+                      vertical-align:top;font-size:13px;">
+                    <strong>{{ violation.inventory_name }}</strong>
+                    <br/>
+                    <span style="font-size:11px;color:#888888;">ID {{ violation.inventory_id }}</span>
+                  </td>
+                  <!-- Nombre -->
+                  <td bgcolor="{{ row_bg }}" style="background-color:{{ row_bg }};
+                      padding:10px 12px;border:1px solid #dde3ea;
+                      vertical-align:top;text-align:center;">
+                    <span style="display:inline-block;background-color:#c62828;
+                        color:#ffffff;font-size:12px;font-weight:bold;
+                        padding:2px 8px;min-width:24px;text-align:center;">
+                      {{ violation.hosts | length }}
+                    </span>
+                  </td>
+                  <!-- Liste des hosts -->
+                  <td bgcolor="{{ row_bg }}" style="background-color:{{ row_bg }};
+                      padding:10px 12px;border:1px solid #dde3ea;
+                      vertical-align:top;font-size:12px;font-family:Consolas,Courier New,monospace;">
+                    {% for host in violation.hosts %}
+                    {{ host.name }}{% if not loop.last %}<br/>{% endif %}
+                    {% endfor %}
+                  </td>
+                </tr>
+                {% endfor %}
+
+              </table>
+            </td>
+          </tr>
+
+          <!-- ================================================ -->
+          <!-- PIED DE PAGE                                     -->
+          <!-- ================================================ -->
+          <tr>
+            <td style="padding:24px 28px 28px;">
+              <p style="margin:0 0 14px;">
+                Si vous avez des questions ou besoin d'aide pour identifier ou
+                retirer ces hosts, n'hesitez pas a contacter l'equipe APPOPS.<br/>
+                Merci pour votre collaboration.
+              </p>
+              <p style="margin:0;">
+                Cordialement,<br/>
+                <strong>L'equipe APPOPS — PDA v2</strong>
+              </p>
+            </td>
+          </tr>
+
+          <!-- ================================================ -->
+          <!-- PIED TECHNIQUE                                   -->
+          <!-- ================================================ -->
+          <tr>
+            <td bgcolor="#f4f6f8" style="background-color:#f4f6f8;padding:12px 28px;
+                border-top:1px solid #dde3ea;">
+              <p style="margin:0;font-size:11px;color:#9e9e9e;text-align:center;">
+                Message genere automatiquement par Ansible Automation Platform —
+                {{ env_name }} — {{ report_date }}
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /Carte email -->
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

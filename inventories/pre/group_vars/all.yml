@@ -1,0 +1,8 @@
+---
+# ============================================================
+# Environnement : Hors-Production (pre)
+# ============================================================
+env_name: "HORS-PRODUCTION 3PG"
+
+aap_host: "https://automation-platform-hp.3pg.group.gca"
+aap_token: "{{ vault_aap_token }}"

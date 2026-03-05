@@ -1,0 +1,63 @@
+---
+# ============================================================
+# Organisations AAP — commun à tous les environnements
+# ============================================================
+# contact_email : destinataire principal de l'alerte pour l'équipe
+aap_organization_map:
+  - id: 8
+    name:          "ORG_CAGIP_CAPS_EXM_BOD"
+    label:         "EXM BOD"
+    contact_email: "cagip_dgc_clp_exm_ebo_bod@ca-gip.fr"
+  - id: 9
+    name:          "ORG_CAGIP_CAPS_ATCP"
+    label:         "ATCP"
+    contact_email: "CAGIP_DGC_CLP_APPOPS@ca-gip.fr"
+  - id: 10
+    name:          "ORG_CAGIP_CAPS_EXF_EIR"
+    label:         "EXF EIR"
+    contact_email: "CAGIP_DGC_CLP_EXF_EIR@ca-gip.fr"
+  - id: 13
+    name:          "ORG_CAGIP_CAPS_EXM_FPC"
+    label:         "EXM FPC"
+    contact_email: "cagip_dgc_clp_exm_ebo_fpc@ca-gip.fr"
+  - id: 15
+    name:          "ORG_CAGIP_CAPS_EXF_ETP"
+    label:         "EXF ETP"
+    contact_email: "CAGIP_DGC_CLP_EXF_ETP_OPEN@ca-gip.fr"
+  - id: 16
+    name:          "ORG_CAGIP_CAPS_EXM_EXD"
+    label:         "EXM EXD"
+    contact_email: "CAGIP_DGC_CLP_EXM_EXD@ca-gip.fr"
+  - id: 17
+    name:          "ORG_CAGIP_CAPS_EXM_EPO"
+    label:         "EXM EPO"
+    contact_email: "CAGIP_DGC_CLP_EXM_EPO@ca-gip.fr"
+  - id: 20
+    name:          "ORG_CAGIP_CAPS_EXF_EXE"
+    label:         "EXF EXE"
+    contact_email: "CAGIP_DGC_CLP_EXF_EXE@ca-gip.fr"
+
+
+# ============================================================
+# Domaine de production interdit en hors-production
+# ============================================================
+# Tout host dont le nom se termine par ce domaine déclenche une alerte.
+# Modifier uniquement si le domaine de production venait à changer.
+forbidden_host_domain: "sec-prod1.lan"
+
+
+# ============================================================
+# SMTP
+# ============================================================
+email_smtp_host: "186.116.50.13"
+email_smtp_port: 25
+email_from:      "PDA v2 Reporting <robot-pda@ca-gip.fr>"
+
+# Destinataires toujours mis en copie (supervision APPOPS)
+# L'équipe concernée (contact_email de l'org) est le destinataire principal (to)
+email_cc:
+  - "Teddy CHEVRIER <teddy.chevrier@ca-gip.fr>"
+  - "CAGIP_DGC_CLP_APPOPS <CAGIP_DGC_CLP_APPOPS@ca-gip.fr>"
+  - "Fabien HUREL <fabien.hurel@ca-gip.fr>"
+  - "MARCHAND Valentin (PRESTATAIRE CA-GIP) <valentin.marchand-prestataire@ca-gip.fr>"
+  - "KLOTZ Johan (PRESTATAIRE CA-GIP) <johan.klotz-prestataire@ca-gip.fr>"
